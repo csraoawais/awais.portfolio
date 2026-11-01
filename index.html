@@ -43,6 +43,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
@@ -178,6 +179,36 @@ section { scroll-margin-top: 72px; }
 .links a:hover { text-decoration-color: var(--bg); }
 .placeholder { font-style: italic; opacity: .7; }
 
+/* Experience tabs */
+.xtabs { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.xtablist { display: flex; flex-direction: column; border-right: 1px solid var(--line); background: var(--bg); }
+.xtab { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 2px; padding: 14px 18px; border-left: 3px solid transparent; border-bottom: 1px solid var(--line); }
+.xtab:last-child { border-bottom: 0; }
+.xtab:hover { background: var(--surface); }
+.xtab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.xtab[aria-selected="true"] { background: var(--surface); border-left-color: var(--accent); }
+.xtab-co { font-weight: 600; font-size: .9375rem; color: var(--ink); }
+.xtab[aria-selected="true"] .xtab-co { color: var(--accent); }
+.xtab-when { font: 400 .75rem var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.xpanels { min-width: 0; }
+.xpanel { padding: 28px 32px; display: grid; gap: 18px; align-content: start; }
+.xpanel:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.xpanel-head { display: grid; gap: 4px; }
+.xpanel-head .job-when { display: block; }
+.xpanel-head h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em; }
+.xpanel-head .org { color: var(--accent); font-weight: 600; }
+.xbullets { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; max-width: 46em; }
+.xbullets li::marker { color: var(--accent); }
+.xpanel + .xpanel { border-top: 1px solid var(--line); }
+@media (max-width: 760px) {
+  .xtabs { grid-template-columns: minmax(0, 1fr); }
+  .xtablist { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+  .xtab { flex: 0 0 auto; border-left: 0; border-bottom: 3px solid transparent; border-right: 1px solid var(--line); padding: 12px 16px; }
+  .xtab:last-child { border-bottom: 3px solid transparent; border-right: 0; }
+  .xtab[aria-selected="true"], .xtab[aria-selected="true"]:last-child { border-bottom-color: var(--accent); }
+  .xpanel { padding: 22px 18px; }
+}
+
 /* Experience timeline */
 .timeline { list-style: none; margin: 0; padding: 0; display: grid; }
 .job { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 32px; padding-block: 26px; border-top: 1px solid var(--line); }
@@ -190,7 +221,7 @@ section { scroll-margin-top: 72px; }
 .job-body .org { color: var(--accent); font-weight: 600; }
 .job-body ul { margin: 0; padding-left: 1.1em; display: grid; gap: 5px; }
 .job-body ul li::marker { color: var(--accent); }
-.extras { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 28px 32px; }
+.extras { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 28px 32px; }
 .extras > div { display: grid; gap: 8px; align-content: start; }
 .extras h3 { font-size: 1.0625rem; font-weight: 700; }
 .extras ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; color: var(--muted); }
@@ -262,89 +293,123 @@ footer .mono { font-family: var(--font-mono); font-size: .8125rem; }
     <div class="wrap">
       <div class="section-head">
         <h2>Experience</h2>
-        <p>Five years building backend systems, from internship to senior engineer and team lead.</p>
+        <p>Five years and seven companies, from trainee to senior engineer and team lead. Pick a company to see the details.</p>
       </div>
-      <ol class="timeline">
-        <li class="job">
-          <div class="job-when"><span class="now">03/2026 – Present</span><span>Remote</span></div>
-          <div class="job-body">
-            <h3>Senior Backend Engineer · <span class="org">Compakt Automatisering B.V.</span></h3>
-            <ul>
-              <li>Built the AMICE integration that submits meldingen (reports) to LMA, reaching 90% accuracy.</li>
-              <li>Java, Spring Boot and microservices, with Apache CXF for the AMICE SOAP web service.</li>
-              <li>Secured REST API with JWT, Swagger documentation and Spring Actuator health checks for CI/CD.</li>
-            </ul>
+      <div class="xtabs">
+        <div class="xtablist" role="tablist" aria-label="Companies">
+          <button class="xtab" role="tab" id="tab-compakt" aria-controls="panel-compakt" aria-selected="true"><span class="xtab-co">Compakt Automatisering B.V.</span><span class="xtab-when">03/2026 – Present</span></button>
+          <button class="xtab" role="tab" id="tab-luna" aria-controls="panel-luna" aria-selected="false" tabindex="-1"><span class="xtab-co">Luna Partner</span><span class="xtab-when">04/2025 – 02/2026</span></button>
+          <button class="xtab" role="tab" id="tab-telenor" aria-controls="panel-telenor" aria-selected="false" tabindex="-1"><span class="xtab-co">Tekrowe Digital · Telenor GSS</span><span class="xtab-when">07/2024 – 04/2025</span></button>
+          <button class="xtab" role="tab" id="tab-brkz" aria-controls="panel-brkz" aria-selected="false" tabindex="-1"><span class="xtab-co">Tekrowe Digital · BRKZ</span><span class="xtab-when">02/2024 – 07/2024</span></button>
+          <button class="xtab" role="tab" id="tab-rootpointers" aria-controls="panel-rootpointers" aria-selected="false" tabindex="-1"><span class="xtab-co">RootPointers</span><span class="xtab-when">08/2022 – 02/2024</span></button>
+          <button class="xtab" role="tab" id="tab-evamp" aria-controls="panel-evamp" aria-selected="false" tabindex="-1"><span class="xtab-co">Evamp &amp; Saanga</span><span class="xtab-when">10/2021 – 08/2022</span></button>
+          <button class="xtab" role="tab" id="tab-funavry" aria-controls="panel-funavry" aria-selected="false" tabindex="-1"><span class="xtab-co">Funavry Technologies</span><span class="xtab-when">08/2021 – 10/2021</span></button>
+        </div>
+        <div class="xpanels">
+        <div class="xpanel" role="tabpanel" id="panel-compakt" aria-labelledby="tab-compakt" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Senior Backend Engineer</h3>
+            <p class="org">Compakt Automatisering B.V.</p>
+            <p class="job-when"><span class="now">03/2026 – Present</span> · <span>Remote</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>04/2025 – 02/2026</span><span>Italy (Remote)</span></div>
-          <div class="job-body">
-            <h3>Senior Backend Engineer · <span class="org">Luna Partner</span></h3>
-            <ul>
-              <li>Shaped architecture, API design and delivery practices for a large ERP platform.</li>
-              <li>Built REST services and data pipelines with strong testing, monitoring and performance focus.</li>
-              <li>Drove security and access control: authentication, authorization and role-based policies.</li>
-              <li>Streamlined data modelling and migrations for smooth releases and maintainable schemas.</li>
-              <li>Delivered PDF and Excel document and export workflows used across finance and HR modules.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Worked on the AMICE integration, submitting meldingen (reports) to LMA and achieving 90% accuracy.</li>
+              <li>Built with Java, Spring Boot and a microservices architecture, using Apache CXF for the AMICE SOAP web service.</li>
+              <li>Built a secured REST API (JWT) with Swagger documentation and Spring Actuator health checks for CI/CD.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>Microservices</li><li>Apache CXF</li><li>SOAP</li><li>JWT</li><li>Swagger</li><li>Spring Actuator</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-luna" aria-labelledby="tab-luna" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Senior Backend Engineer</h3>
+            <p class="org">Luna Partner</p>
+            <p class="job-when"><span>04/2025 – 02/2026</span> · <span>Italy (Remote)</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>07/2024 – 04/2025</span><span>Islamabad (Hybrid)</span></div>
-          <div class="job-body">
-            <h3>Senior Backend Engineer · <span class="org">Tekrowe Digital, consultant at Telenor GSS</span></h3>
-            <ul>
-              <li>Led the team building microservices for Telenor Finland (DNA) with Java and Spring Boot.</li>
-              <li>Integrated Coupa APIs to create purchase orders and invoices automatically from ERP.</li>
-              <li>Worked directly with the customer to design PO fetching from ERP to Coupa.</li>
-              <li>Built PO monitoring that corrects failed migrations in time, reaching 90% accuracy in the ERP-to-Coupa flow.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Development for a large ERP platform, shaping architecture, API design and delivery practices.</li>
+              <li>Built reliable REST services and data pipelines with a strong focus on testing, monitoring and performance.</li>
+              <li>Drove security and access control across the stack, integrating authentication, authorization and role-based policies.</li>
+              <li>Streamlined data modelling and migrations, enabling smooth releases and maintainable schemas.</li>
+              <li>Delivered scalable document and export workflows (PDF and Excel) used across finance and HR modules.</li>
+              <li>Collaborated with stakeholders to turn requirements into clear roadmaps and shipped features end to end.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>REST APIs</li><li>Role-based access</li><li>PDF / Excel exports</li><li>Data migrations</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-telenor" aria-labelledby="tab-telenor" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Senior Backend Engineer</h3>
+            <p class="org">Tekrowe Digital · Telenor GSS</p>
+            <p class="job-when"><span>07/2024 – 04/2025</span> · <span>Islamabad (Hybrid)</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>02/2024 – 07/2024</span><span>Islamabad (Hybrid)</span></div>
-          <div class="job-body">
-            <h3>Backend Engineer · <span class="org">Tekrowe Digital, consultant at BRKZ</span></h3>
-            <ul>
-              <li>Developed backend services at BRKZ with Kotlin, MongoDB and microservices.</li>
-              <li>Used Linear, Notion and Datadog for planning and monitoring.</li>
-              <li>Worked in Agile across the full lifecycle, with code reviews and error-free releases.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Led the team and developed microservices for Telenor Finland (DNA) using Java, Spring Boot and a microservices architecture.</li>
+              <li>Used Coupa APIs to create purchase orders and invoices automatically from ERP to Coupa for DNA.</li>
+              <li>Worked directly with the customer, gathered requirements and delivered a solution for fetching POs from ERP to Coupa.</li>
+              <li>Built a monitoring solution that corrects failed purchase order migrations in time, achieving 90% accuracy in the PO flow from ERP to Coupa.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>Microservices</li><li>Coupa APIs</li><li>ERP integration</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-brkz" aria-labelledby="tab-brkz" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Backend Engineer</h3>
+            <p class="org">Tekrowe Digital · BRKZ</p>
+            <p class="job-when"><span>02/2024 – 07/2024</span> · <span>Islamabad (Hybrid)</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>08/2022 – 02/2024</span><span>Lahore (Hybrid)</span></div>
-          <div class="job-body">
-            <h3>Java Developer, Team Lead · <span class="org">RootPointers</span></h3>
-            <ul>
-              <li>Architected microservices for a critical application, improving scalability and resilience.</li>
-              <li>Set up GitLab CI/CD, Docker Hub and Kubernetes with Helm; configured ELK for distributed logging.</li>
-              <li>Led requirement gathering and documentation with stakeholders.</li>
-              <li>Mentored and led a team of three.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Developed backend solutions at BRKZ using Kotlin, MongoDB and a microservices architecture.</li>
+              <li>Used Linear, Notion and Datadog for efficient project management and monitoring.</li>
+              <li>Worked with Agile methodologies and took part in the full software development lifecycle.</li>
+              <li>Ensured seamless integration of code changes and error-free releases, and conducted thorough code reviews.</li>
+          </ul>
+          <ul class="tags"><li>Kotlin</li><li>MongoDB</li><li>Microservices</li><li>Datadog</li><li>Linear</li><li>Notion</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-rootpointers" aria-labelledby="tab-rootpointers" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Java Developer (Team Lead)</h3>
+            <p class="org">RootPointers</p>
+            <p class="job-when"><span>08/2022 – 02/2024</span> · <span>Lahore (Hybrid)</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>10/2021 – 08/2022</span><span>Islamabad</span></div>
-          <div class="job-body">
-            <h3>Associate Software Engineer, Integration · <span class="org">Evamp &amp; Saanga</span></h3>
-            <ul>
-              <li>Delivered the Self-Care Solution for Korek, a leading telecom operator in Iraq.</li>
-              <li>Implemented ELK with Kibana dashboards for proactive issue resolution.</li>
-              <li>Shipped security fixes including Diffie-Hellman hardening and a force-update feature.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Architected microservices for a critical application, optimizing scalability and resilience.</li>
+              <li>Led requirement gathering and documentation, ensuring alignment with stakeholders.</li>
+              <li>Configured the ELK Stack for real-time distributed logging, improving monitoring.</li>
+              <li>Implemented GitLab CI/CD pipelines, Docker Hub and Kubernetes with Helm, streamlining deployment.</li>
+              <li>Contributed to core development, improving system functionality and performance.</li>
+              <li>Managed Docker-based microservice deployments, optimizing resource utilization.</li>
+              <li>Mentored and led a team of three, encouraging innovation and collaboration.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>ELK</li><li>GitLab CI/CD</li><li>Docker</li><li>Kubernetes</li><li>Helm</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-evamp" aria-labelledby="tab-evamp" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Associate Software Engineer, Integration</h3>
+            <p class="org">Evamp &amp; Saanga</p>
+            <p class="job-when"><span>10/2021 – 08/2022</span> · <span>Islamabad, PK</span></p>
           </div>
-        </li>
-        <li class="job">
-          <div class="job-when"><span>08/2021 – 10/2021</span><span>Islamabad</span></div>
-          <div class="job-body">
-            <h3>Java Trainee Engineer · <span class="org">Funavry Technologies</span></h3>
-            <ul>
-              <li>Helped build the TABOOR queue management system with Java and Spring Boot, using Elasticsearch for search and MySQL for storage.</li>
-            </ul>
+          <ul class="xbullets">
+              <li>Delivered the Self-Care Solution project for Korek, a leading telecom company in Iraq.</li>
+              <li>Implemented the ELK stack with Kibana dashboards for proactive issue resolution and process monitoring.</li>
+              <li>Improved application security with critical fixes, including Diffie-Hellman hardening and a force-update feature.</li>
+              <li>Designed and developed scalable components using Java and Spring Boot.</li>
+              <li>Deployed executable JAR files using PuTTY and WinSCP.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>ELK</li><li>Kibana</li></ul>
+        </div>
+        <div class="xpanel" role="tabpanel" id="panel-funavry" aria-labelledby="tab-funavry" tabindex="0">
+          <div class="xpanel-head">
+            <h3>Java Trainee Engineer</h3>
+            <p class="org">Funavry Technologies</p>
+            <p class="job-when"><span>08/2021 – 10/2021</span> · <span>Islamabad, PK</span></p>
           </div>
-        </li>
-      </ol>
+          <ul class="xbullets">
+              <li>Played a key role in developing the TABOOR QMS (queue management) application using Java and Spring Boot.</li>
+              <li>Integrated Elasticsearch for improved search and indexing.</li>
+              <li>Used MySQL for efficient data storage and retrieval.</li>
+          </ul>
+          <ul class="tags"><li>Java</li><li>Spring Boot</li><li>Elasticsearch</li><li>MySQL</li></ul>
+        </div>
+        </div>
+      </div>
       <div class="extras">
         <div>
           <h3>Education</h3>
@@ -356,7 +421,11 @@ footer .mono { font-family: var(--font-mono); font-size: .8125rem; }
         </div>
         <div>
           <h3>Mentorship</h3>
-          <ul><li>Led a Discord community at AT Hub, mentoring software engineering students.</li><li>Tutored Intro to Programming and Spring Boot.</li></ul>
+          <ul><li>Led a Discord community at AT Hub, giving mentorship and career advice to software engineering students.</li><li>Tutored computer science students in Intro to Programming and Spring Boot.</li></ul>
+        </div>
+        <div>
+          <h3>Activities</h3>
+          <ul><li>Senior Member, COMSATS Literary Society (2019 – 2021): organized university events and competed in debating competitions.</li></ul>
         </div>
       </div>
       <div class="resume-cta">
@@ -376,11 +445,11 @@ footer .mono { font-family: var(--font-mono); font-size: .8125rem; }
         <div class="skill"><h3>Backend</h3><ul class="tags"><li>Java</li><li>Kotlin</li><li>Reactive Java</li><li>Spring Boot</li><li>Spring Web</li><li>Spring WebFlux</li><li>Spring Security</li><li>Spring Data JPA</li><li>Hibernate</li><li>JHipster</li></ul></div>
         <div class="skill"><h3>API &amp; architecture</h3><ul class="tags"><li>REST APIs</li><li>Microservices</li><li>Service-layer design</li><li>SOAP (Apache CXF)</li><li>Swagger / OpenAPI</li><li>Validation</li></ul></div>
         <div class="skill"><h3>Databases</h3><ul class="tags"><li>PostgreSQL</li><li>MySQL</li><li>MongoDB</li><li>MS SQL Server</li><li>Data modelling</li><li>Indexing</li><li>Liquibase</li><li>R2DBC</li></ul></div>
-        <div class="skill"><h3>Integration &amp; messaging</h3><ul class="tags"><li>Kafka</li><li>ksqlDB</li><li>ERP integrations</li><li>Coupa APIs</li><li>Elasticsearch</li></ul></div>
+        <div class="skill"><h3>Integration &amp; messaging</h3><ul class="tags"><li>Kafka</li><li>ksqlDB</li><li>ERP integrations</li><li>Coupa APIs</li><li>Elasticsearch</li><li>Postman</li></ul></div>
         <div class="skill"><h3>Security</h3><ul class="tags"><li>JWT</li><li>Keycloak</li><li>Role-based access</li><li>App-level authorization</li></ul></div>
-        <div class="skill"><h3>Cloud &amp; DevOps</h3><ul class="tags"><li>Docker</li><li>Kubernetes</li><li>Helm</li><li>AWS EC2</li><li>GitLab CI/CD</li><li>Maven</li></ul></div>
-        <div class="skill"><h3>Observability &amp; workflow</h3><ul class="tags"><li>ELK Stack</li><li>Datadog</li><li>Spring Actuator</li><li>Jira</li><li>Linear</li><li>Agile</li></ul></div>
-        <div class="skill"><h3>Frontend collaboration</h3><ul class="tags"><li>Angular</li><li>API contracts</li><li>Postman</li></ul></div>
+        <div class="skill"><h3>Cloud &amp; DevOps</h3><ul class="tags"><li>Docker</li><li>Kubernetes</li><li>Helm</li><li>AWS</li><li>EC2</li><li>GitLab CI/CD</li><li>Maven</li></ul></div>
+        <div class="skill"><h3>Observability &amp; workflow</h3><ul class="tags"><li>ELK Stack</li><li>Datadog</li><li>Spring Actuator</li><li>Jira</li><li>Confluence</li><li>Linear</li><li>Notion</li><li>Agile</li></ul></div>
+        <div class="skill"><h3>Frontend collaboration</h3><ul class="tags"><li>Angular</li><li>API contracts</li></ul></div>
       </div>
     </div>
   </section>
@@ -577,5 +646,33 @@ footer .mono { font-family: var(--font-mono); font-size: .8125rem; }
   </div>
 </footer>
 <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.xtab'));
+  if (!tabs.length) return;
+  document.documentElement.classList.add('js');
+  function select(t, focus) {
+    tabs.forEach(function (b) {
+      var on = b === t;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;
+      document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) t.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t, false); });
+    t.addEventListener('keydown', function (ev) {
+      var k = ev.key, n = null;
+      if (k === 'ArrowDown' || k === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+      if (k === 'ArrowUp' || k === 'ArrowLeft') n = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (k === 'Home') n = tabs[0];
+      if (k === 'End') n = tabs[tabs.length - 1];
+      if (n) { ev.preventDefault(); select(n, true); }
+    });
+  });
+  select(tabs[0], false);
+})();
+</script>
 </body>
 </html>
